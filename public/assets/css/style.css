@@ -20,26 +20,25 @@ body{
   }
   
   #nameComment{
-    /*border-bottom: 2px solid #ec407a;*/
     font-weight: bold;
     background: #7c797a;
     color: white;
   }
   
-  /* label focus color */
   .input-field input[type=text]:focus + label {
    color: #e91e63;
   }
-  /* label underline focus color */
+
   .input-field input[type=text]:focus {
    border-bottom: 1px solid;
    box-shadow: 0 1px 0 0 #000;
   }
-  /* icon prefix focus color */
+
   .input-field .prefix.active {
    color: #263bf5;
   }
   
+  /* overrides materialize css */
   nav .brand-logo {
     font-size: 3.1rem;
   }
@@ -47,3 +46,9 @@ body{
   nav ul a {
     font-size: 3rem;
   }
+
+  .left-align {
+    text-align: center;
+  }
+
+  
