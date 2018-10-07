@@ -8,7 +8,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 //Require models
-var Comment = require('../models/Comment.js');
+var Comment = require('../models/comment.js');
 var article = require('../models/article.js');
 
 //index
@@ -124,7 +124,7 @@ router.get('/readarticle/:id', function(req, res){
 
     // //find the article at the id
     article.findOne({ _id: articleId })
-      .populate('Comment')
+      .populate('comment')
       .exec(function(err, doc){
       if(err){
         console.log('Error: ' + err);
@@ -137,7 +137,7 @@ router.get('/readarticle/:id', function(req, res){
 
           $('.l-col__main').each(function(i, element){
             hbsObj.body = $(this).children('.c-entry-content').children('p').text();
-            //send article body and Comments to article.handlbars through hbObj
+            //send article body and comments to article.handlbars through hbObj
             res.render('article', hbsObj);
             //prevents loop through so it doesn't return an empty hbsObj.body
             return false;
@@ -148,20 +148,20 @@ router.get('/readarticle/:id', function(req, res){
     });
 });
 
-// Create a new Comment
-router.post('/Comment/:id', function(req, res) {
+// Create a new comment
+router.post('/comment/:id', function(req, res) {
   var user = req.body.name;
-  var content = req.body.Comment;
+  var content = req.body.comment;
   var articleId = req.params.id;
 
   //submitted form
-  var CommentObj = {
+  var commentObj = {
     name: user,
     body: content
   };
  
-  //using the Comment model, create a new Comment
-  var newComment = new Comment(CommentObj);
+  //using the comment model, create a new comment
+  var newComment = new Comment(commentObj);
 
   newComment.save(function(err, doc) {
       if (err) {
@@ -169,7 +169,7 @@ router.post('/Comment/:id', function(req, res) {
       } else {
           console.log(doc._id)
           console.log(articleId)
-          article.findOneAndUpdate({ "_id": req.params.id }, {$push: {'Comment':doc._id}}, {new: true})
+          article.findOneAndUpdate({ "_id": req.params.id }, {$push: {'comment':doc._id}}, {new: true})
             //execute everything
             .exec(function(err, doc) {
                 if (err) {

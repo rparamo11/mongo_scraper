@@ -1,8 +1,8 @@
 body{
     background: #b7c6d6;
     background-size: 600px;
-    font-family: 'Open Sans Condensed', sans-serif;
-    font-size: 20px;
+    font-family: 'Abril Fatface', sans-serif;
+    font-size: 16px;
     display: flex;
     min-height: 100vh;
     flex-direction: column;
@@ -32,18 +32,18 @@ body{
   }
   /* label underline focus color */
   .input-field input[type=text]:focus {
-   border-bottom: 1px solid #e91e63;
+   border-bottom: 1px solid;
    box-shadow: 0 1px 0 0 #000;
   }
   /* icon prefix focus color */
   .input-field .prefix.active {
-   color: #ec407a;
+   color: #263bf5;
   }
   
   nav .brand-logo {
-    font-size: 5.1rem;
+    font-size: 3.1rem;
   }
   
   nav ul a {
-    font-size: 5rem;
+    font-size: 3rem;
   }
