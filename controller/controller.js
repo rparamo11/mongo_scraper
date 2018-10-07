@@ -9,7 +9,7 @@ var cheerio = require('cheerio');
 
 //Require models
 var Comment = require('../models/Comment.js');
-var Article = require('../models/Article.js');
+var article = require('../models/article.js');
 
 //index
 router.get('/', function(req, res) {
@@ -19,7 +19,7 @@ router.get('/', function(req, res) {
 // A GET request to scrape the Verge website
 router.get('/scrape', function(req, res) {
     // First, we grab the body of the html with request
-    request('http://www.nasa.gov', function(error, response, html) {
+    request('http://www.theverge.com/science', function(error, response, html) {
         // Then, we load that into cheerio and save it to $ for a shorthand selector
         var $ = cheerio.load(html);
         var titlesArray = [];
@@ -41,12 +41,12 @@ router.get('/scrape', function(req, res) {
                 titlesArray.push(result.title);
 
                 // only add the article if is not already there
-                Article.count({ title: result.title}, function (err, test){
+                article.count({ title: result.title}, function (err, test){
                     //if the test is 0, the entry is unique and good to save
                   if(test == 0){
 
-                    //using Article model, create new object
-                    var entry = new Article (result);
+                    //using article model, create new object
+                    var entry = new article (result);
 
                     //save entry to mongodb
                     entry.save(function(err, doc) {
@@ -62,7 +62,7 @@ router.get('/scrape', function(req, res) {
         }
         // Log that scrape is working, just the content was missing parts
         else{
-          console.log('Article already exists.')
+          console.log('article already exists.')
         }
 
           }
@@ -79,7 +79,7 @@ router.get('/scrape', function(req, res) {
 //this will grab every article an populate the DOM
 router.get('/articles', function(req, res) {
     //allows newer articles to be on top
-    Article.find().sort({_id: -1})
+    article.find().sort({_id: -1})
         //send to handlebars
         .exec(function(err, doc) {
             if(err){
@@ -93,7 +93,7 @@ router.get('/articles', function(req, res) {
 
 // This will get the articles we scraped from the mongoDB in JSON
 router.get('/articles-json', function(req, res) {
-    Article.find({}, function(err, doc) {
+    article.find({}, function(err, doc) {
         if (err) {
             console.log(err);
         } else {
@@ -104,7 +104,7 @@ router.get('/articles-json', function(req, res) {
 
 //clear all articles for testing purposes
 router.get('/clearAll', function(req, res) {
-    Article.remove({}, function(err, doc) {
+    article.remove({}, function(err, doc) {
         if (err) {
             console.log(err);
         } else {
@@ -115,7 +115,7 @@ router.get('/clearAll', function(req, res) {
     res.redirect('/articles-json');
 });
 
-router.get('/readArticle/:id', function(req, res){
+router.get('/readarticle/:id', function(req, res){
   var articleId = req.params.id;
   var hbsObj = {
     article: [],
@@ -123,8 +123,8 @@ router.get('/readArticle/:id', function(req, res){
   };
 
     // //find the article at the id
-    Article.findOne({ _id: articleId })
-      .populate('comment')
+    article.findOne({ _id: articleId })
+      .populate('Comment')
       .exec(function(err, doc){
       if(err){
         console.log('Error: ' + err);
@@ -137,7 +137,7 @@ router.get('/readArticle/:id', function(req, res){
 
           $('.l-col__main').each(function(i, element){
             hbsObj.body = $(this).children('.c-entry-content').children('p').text();
-            //send article body and comments to article.handlbars through hbObj
+            //send article body and Comments to article.handlbars through hbObj
             res.render('article', hbsObj);
             //prevents loop through so it doesn't return an empty hbsObj.body
             return false;
@@ -148,20 +148,20 @@ router.get('/readArticle/:id', function(req, res){
     });
 });
 
-// Create a new comment
-router.post('/comment/:id', function(req, res) {
+// Create a new Comment
+router.post('/Comment/:id', function(req, res) {
   var user = req.body.name;
-  var content = req.body.comment;
+  var content = req.body.Comment;
   var articleId = req.params.id;
 
   //submitted form
-  var commentObj = {
+  var CommentObj = {
     name: user,
     body: content
   };
  
-  //using the Comment model, create a new comment
-  var newComment = new Comment(commentObj);
+  //using the Comment model, create a new Comment
+  var newComment = new Comment(CommentObj);
 
   newComment.save(function(err, doc) {
       if (err) {
@@ -169,13 +169,13 @@ router.post('/comment/:id', function(req, res) {
       } else {
           console.log(doc._id)
           console.log(articleId)
-          Article.findOneAndUpdate({ "_id": req.params.id }, {$push: {'comment':doc._id}}, {new: true})
+          article.findOneAndUpdate({ "_id": req.params.id }, {$push: {'Comment':doc._id}}, {new: true})
             //execute everything
             .exec(function(err, doc) {
                 if (err) {
                     console.log(err);
                 } else {
-                    res.redirect('/readArticle/' + articleId);
+                    res.redirect('/readarticle/' + articleId);
                 }
             });
         }

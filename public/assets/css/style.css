@@ -1,8 +1,8 @@
 body{
-    background: #4e8fda;
+    background: #b7c6d6;
     background-size: 600px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 16px;
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 20px;
     display: flex;
     min-height: 100vh;
     flex-direction: column;
@@ -40,4 +40,10 @@ body{
    color: #ec407a;
   }
   
+  nav .brand-logo {
+    font-size: 5.1rem;
+  }
   
+  nav ul a {
+    font-size: 5rem;
+  }
