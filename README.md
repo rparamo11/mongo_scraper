@@ -5,8 +5,7 @@ Mongo-Scrapper will let the user scrape news articles from The Verge website. Wh
 #### Note for developers. Make sure you do "npm install" on your terminal prior to running the app. 
 
 ## Get Started
-https://still-headland-93466.herokuapp.com/
-
+https://floating-spire-56380.herokuapp.com/
 
 
 ## Dependencies/Technologies
